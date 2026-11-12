@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Sach - Quan ly sach{% endblock %}
+{% block content %}
+<div class="bar"><h2>Sach</h2><a class="btn" href="{{ url_for('book_create', category=selected or '') }}">Them sach</a></div>
+<form class="filters" method="get">
+  <input type="search" name="q" value="{{ q }}" placeholder="Tim theo ten sach hoac tac gia" aria-label="Tim sach">
+  <select name="category" aria-label="Loc theo danh muc" onchange="this.form.submit()">
+    <option value="">Tat ca danh muc</option>
+    {% for c in categories %}<option value="{{ c.id }}" {{ 'selected' if selected == c.id }}>{{ c.name }}</option>{% endfor %}
+  </select>
+  <button class="btn ghost">Tim</button>
+</form>
+<div class="table-wrap"><table>
+  <tr><th>Ten sach</th><th>Tac gia</th><th>Danh muc</th><th class="num">Nam</th><th class="num">Gia</th><th class="num">SL</th><th></th></tr>
+  {% for b in books %}
+  <tr>
+    <td><b>{{ b.title }}</b>{% if b.description %}<br><span class="sub">{{ b.description[:70] }}{{ '...' if b.description|length > 70 }}</span>{% endif %}</td>
+    <td>{{ b.author }}</td>
+    <td><a class="tag" href="{{ url_for('book_list', category=b.category_id) }}">{{ b.category }}</a></td>
+    <td class="num">{{ b.year or '-' }}</td>
+    <td class="num">{{ b.price | vnd }}</td>
+    <td class="num {{ 'low' if b.quantity <= 5 }}">{{ b.quantity }}</td>
+    <td class="actions">
+      <a class="btn ghost sm" href="{{ url_for('book_edit', bid=b.id) }}">Sua</a>
+      <form method="post" action="{{ url_for('book_delete', bid=b.id) }}" data-confirm="Xoa sach {{ b.title }}?" onsubmit="return confirm(this.dataset.confirm)">
+        <button class="btn danger sm">Xoa</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}<tr><td colspan="7" class="empty">Khong tim thay sach nao.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

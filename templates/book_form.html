@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Sua' if editing else 'Them' }} sach - Quan ly sach{% endblock %}
+{% block content %}
+<h2>{{ 'Sua sach' if editing else 'Them sach' }}</h2>
+<form class="panel stack" method="post" style="max-width:680px">
+  <label for="title">Ten sach</label>
+  <input id="title" name="title" value="{{ book.title }}" required maxlength="200" autofocus>
+  <label for="author">Tac gia</label>
+  <input id="author" name="author" value="{{ book.author }}" required maxlength="120">
+  <label for="category_id">Danh muc</label>
+  <select id="category_id" name="category_id" required>
+    <option value="">-- Chon danh muc --</option>
+    {% for c in categories %}<option value="{{ c.id }}" {{ 'selected' if book.category_id|string == c.id|string }}>{{ c.name }}</option>{% endfor %}
+  </select>
+  <div class="row2">
+    <div><label for="price">Gia (VND)</label><input id="price" name="price" type="number" min="0" step="1000" value="{{ book.price }}" required></div>
+    <div><label for="quantity">So luong</label><input id="quantity" name="quantity" type="number" min="0" value="{{ book.quantity }}" required></div>
+    <div><label for="year">Nam xuat ban</label><input id="year" name="year" type="number" min="1000" max="2100" value="{{ book.year or '' }}"></div>
+  </div>
+  <label for="description">Mo ta</label>
+  <textarea id="description" name="description" rows="4">{{ book.description }}</textarea>
+  <div class="form-actions">
+    <button class="btn">{{ 'Luu thay doi' if editing else 'Them sach' }}</button>
+    <a class="btn ghost" href="{{ url_for('book_list') }}">Huy</a>
+  </div>
+</form>
+{% endblock %}

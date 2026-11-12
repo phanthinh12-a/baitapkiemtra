@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Quan ly sach{% endblock %}
+{% block content %}
+<div class="bar">
+  <h2>Dashboard</h2>
+  <div>
+    <a class="btn" href="{{ url_for('category_create') }}">Them danh muc</a>
+    <a class="btn" href="{{ url_for('book_create') }}">Them sach</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><a href="{{ url_for('category_list') }}">Tong so danh muc</a><b>{{ stats.categories }}</b></div>
+  <div class="stat"><a href="{{ url_for('book_list') }}">Tong so sach</a><b>{{ stats.titles }}</b></div>
+  <div class="stat"><span class="sub">Tong so cuon trong kho</span><b>{{ stats.stock }}</b></div>
+  <div class="stat"><span class="sub">Gia tri ton kho</span><b>{{ stats.value | vnd }}</b></div>
+</div>
+
+<h3>Quan ly danh muc</h3>
+<div class="table-wrap" style="margin-bottom:26px"><table>
+  <tr><th>Danh muc</th><th class="num">So sach</th><th class="num">Trong kho</th><th></th></tr>
+  {% for c in per_category %}
+  <tr>
+    <td><a href="{{ url_for('book_list', category=c.id) }}">{{ c.name }}</a></td>
+    <td class="num">{{ c.titles }}</td>
+    <td class="num">{{ c.stock }}</td>
+    <td class="actions">
+      <a class="btn ghost sm" href="{{ url_for('book_create', category=c.id) }}">Them sach</a>
+      <a class="btn ghost sm" href="{{ url_for('category_edit', cid=c.id) }}">Sua</a>
+      <form method="post" action="{{ url_for('category_delete', cid=c.id) }}"
+            data-confirm="Xoa danh muc {{ c.name }}? {{ c.titles }} sach thuoc danh muc nay cung se bi xoa." onsubmit="return confirm(this.dataset.confirm)">
+        <button class="btn danger sm">Xoa</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="4" class="empty">Chua co danh muc. <a href="{{ url_for('category_create') }}">Them danh muc</a></td></tr>
+  {% endfor %}
+</table></div>
+
+<div class="bar"><h3 style="margin:0">Sach them gan day</h3><a class="btn ghost sm" href="{{ url_for('book_list') }}">Xem tat ca sach</a></div>
+<div class="table-wrap" style="margin-bottom:26px"><table>
+  <tr><th>Ten sach</th><th>Tac gia</th><th>Danh muc</th><th class="num">Gia</th><th class="num">SL</th><th></th></tr>
+  {% for b in latest %}
+  <tr>
+    <td>{{ b.title }}</td><td>{{ b.author }}</td>
+    <td><a class="tag" href="{{ url_for('book_list', category=b.category_id) }}">{{ b.category }}</a></td>
+    <td class="num">{{ b.price | vnd }}</td>
+    <td class="num {{ 'low' if b.quantity <= 5 }}">{{ b.quantity }}</td>
+    <td class="actions">
+      <a class="btn ghost sm" href="{{ url_for('book_edit', bid=b.id) }}">Sua</a>
+      <form method="post" action="{{ url_for('book_delete', bid=b.id) }}"
+            data-confirm="Xoa sach {{ b.title }}?" onsubmit="return confirm(this.dataset.confirm)">
+        <button class="btn danger sm">Xoa</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}<tr><td colspan="6" class="empty">Chua co sach nao.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

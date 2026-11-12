@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Sua' if editing else 'Them' }} danh muc - Quan ly sach{% endblock %}
+{% block content %}
+<h2>{{ 'Sua danh muc' if editing else 'Them danh muc' }}</h2>
+<form class="panel stack" method="post" style="max-width:560px">
+  <label for="name">Ten danh muc</label>
+  <input id="name" name="name" value="{{ category.name }}" required maxlength="100" autofocus>
+  <label for="description">Mo ta</label>
+  <textarea id="description" name="description" rows="3">{{ category.description }}</textarea>
+  <div class="form-actions">
+    <button class="btn">{{ 'Luu thay doi' if editing else 'Them danh muc' }}</button>
+    <a class="btn ghost" href="{{ url_for('category_list') }}">Huy</a>
+  </div>
+</form>
+{% endblock %}

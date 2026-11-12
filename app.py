@@ -10,7 +10,7 @@ import sqlite3
 from flask import Flask, g, render_template, request, redirect, url_for, flash, abort
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "library.db")
+DB_PATH = os.path.join(BASE_DIR, "datasach.db")
 
 app = Flask(__name__)
 app.secret_key = "change-this-secret-key"
